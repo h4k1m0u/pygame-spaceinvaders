@@ -69,11 +69,10 @@ class Enemy(Space_Invaders_Sprite):
         """
         if direction == 'bottom':
             self.rect.move_ip(0, ENEMY_SPEED)
-        else:
-            if direction == 'right':
-                self.rect.move_ip(ENEMY_SPEED, 0)
-            elif direction == 'left':
-                self.rect.move_ip(-ENEMY_SPEED, 0)
+        elif direction == 'right':
+            self.rect.move_ip(ENEMY_SPEED, 0)
+        elif direction == 'left':
+            self.rect.move_ip(-ENEMY_SPEED, 0)
 
 
 class Bullet(Space_Invaders_Sprite):

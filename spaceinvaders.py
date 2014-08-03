@@ -7,7 +7,6 @@ import sys
 # game vars
 score = 0
 direction = 'right'
-changing_direction = False
 
 # game init
 pygame.init()
@@ -51,12 +50,23 @@ while True:
                 bullets_group.add(bullet)
                 sprites_group.add(bullet)
         elif event.type == ENEMIES_EVENT:
-            enemies_group.update(direction)
-
             # detect collision between enemy & left|right screen
-            if any(enemy.rect.x <= ENEMY_WIDTH or enemy.rect.x >= WINDOW_WIDTH-2*ENEMY_WIDTH for enemy in enemies_group):
-                enemies_group.update('bottom')
-                direction = 'left' if direction == 'right' else 'right'
+            collide_left = any(enemy.rect.x <= ENEMY_WIDTH for enemy in enemies_group)
+            collide_right = any(enemy.rect.x >= WINDOW_WIDTH-2*ENEMY_WIDTH for enemy in enemies_group)
+
+            if direction == 'left':
+                if collide_left:
+                    direction = 'bottom'
+            elif direction == 'right':
+                if collide_right:
+                    direction = 'bottom'
+            elif direction == 'bottom':
+                if collide_left:
+                    direction = 'right'
+                elif collide_right:
+                    direction = 'left'
+
+            enemies_group.update(direction)
 
     # detect collision between bullet & enemy
     if pygame.sprite.groupcollide(bullets_group, enemies_group, True, True):
