@@ -22,12 +22,12 @@ ENEMIES_EVENT = USEREVENT + 1
 
 
 class Space_Invaders_Sprite(pygame.sprite.Sprite):
-    """ Space Invaders sprites classes extend this classes
-
-        Attributes:
-            image_file (str): Sprite image filename.
-    """
     def __init__(self, image_file):
+        """ Space Invaders sprites classes extend this classes
+
+            Attributes:
+                image_file (str): Sprite image filename.
+        """
         pygame.sprite.Sprite.__init__(self)
 
         # load image & rect
@@ -62,14 +62,18 @@ class Enemy(Space_Invaders_Sprite):
         self.rect.x, self.rect.y = x, y
 
     def update(self, direction='right'):
-        if direction == 'left':
-            self.rect.move_ip(-ENEMY_SPEED, 0)
-        elif direction == 'right':
-            self.rect.move_ip(ENEMY_SPEED, 0)
-        elif direction == 'top':
-            self.rect.move_ip(0, -ENEMY_SPEED)
-        elif direction == 'bottom':
+        """ Moves enemies left or right or bottom
+
+            Attributes:
+                direction (str): 'left' or 'right' or 'bottom'
+        """
+        if direction == 'bottom':
             self.rect.move_ip(0, ENEMY_SPEED)
+        else:
+            if direction == 'right':
+                self.rect.move_ip(ENEMY_SPEED, 0)
+            elif direction == 'left':
+                self.rect.move_ip(-ENEMY_SPEED, 0)
 
 
 class Bullet(Space_Invaders_Sprite):

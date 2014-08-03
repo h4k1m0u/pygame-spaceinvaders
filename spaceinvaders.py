@@ -7,6 +7,7 @@ import sys
 # game vars
 score = 0
 direction = 'right'
+changing_direction = False
 
 # game init
 pygame.init()
@@ -52,15 +53,21 @@ while True:
         elif event.type == ENEMIES_EVENT:
             enemies_group.update(direction)
 
+            # detect collision between enemy & left|right screen
+            if any(enemy.rect.x <= ENEMY_WIDTH or enemy.rect.x >= WINDOW_WIDTH-2*ENEMY_WIDTH for enemy in enemies_group):
+                enemies_group.update('bottom')
+                direction = 'left' if direction == 'right' else 'right'
+
     # detect collision between bullet & enemy
     if pygame.sprite.groupcollide(bullets_group, enemies_group, True, True):
         score += 1
         pygame.display.set_caption("Space Invaders Game - Score: %s" % score)
 
-    # detect collision between enemy & scrren
-    if pygame.sprite.groupcollide(screen, enemies_group, False, False):
-        direction = 'left' if direction == 'right' else 'right'
-        print direction
+    # detect collision between enemy & bottom screen
+    if any(enemy.rect.y > WINDOW_HEIGHT-2*PLAYER_HEIGHT for enemy in enemies_group):
+        print 'Game Over'
+        pygame.quit()
+        sys.exit()
 
     # render sprites
     window.fill((0, 0, 0))
