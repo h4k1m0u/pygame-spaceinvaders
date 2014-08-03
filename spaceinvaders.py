@@ -4,23 +4,34 @@ from pygame.locals import *
 from spaceinvaders_sprites import *
 import sys
 
+# game vars
+score = 0
+direction = 'right'
+
 # game init
 pygame.init()
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.key.set_repeat(400, 30)
+pygame.display.set_caption("Space Invaders Game - Score: %s" % score)
+pygame.key.set_repeat(300, 50)
 clock = pygame.time.Clock()
 
 # groups & sprites
-all_sprites_group = pygame.sprite.Group()
+sprites_group = pygame.sprite.Group()
+enemies_group = pygame.sprite.Group()
+bullets_group = pygame.sprite.Group()
 
 # add sprites to their group
 player = Player()
-all_sprites_group.add(player)
+sprites_group.add(player)
 
 for i in xrange(8):
     for j in xrange(8):
         enemy = Enemy((i+1)*(ENEMY_WIDTH + 5), (j+1)*(ENEMY_HEIGHT + 5))
-        all_sprites_group.add(enemy)
+        sprites_group.add(enemy)
+        enemies_group.add(enemy)
+
+# sync enemies movement
+pygame.time.set_timer(ENEMIES_EVENT, 500)
 
 # game loop
 while True:
@@ -35,13 +46,27 @@ while True:
             elif event.key == K_RIGHT:
                 player.move_right()
             elif event.key == K_SPACE:
-                print 'firing'
+                bullet = Bullet(player.rect.x + PLAYER_WIDTH/2 - BULLET_WIDTH/2)
+                bullets_group.add(bullet)
+                sprites_group.add(bullet)
+        elif event.type == ENEMIES_EVENT:
+            enemies_group.update(direction)
+
+    # detect collision between bullet & enemy
+    if pygame.sprite.groupcollide(bullets_group, enemies_group, True, True):
+        score += 1
+        pygame.display.set_caption("Space Invaders Game - Score: %s" % score)
+
+    # detect collision between enemy & scrren
+    if pygame.sprite.groupcollide(screen, enemies_group, False, False):
+        direction = 'left' if direction == 'right' else 'right'
+        print direction
 
     # render sprites
     window.fill((0, 0, 0))
-    all_sprites_group.draw(window)
+    sprites_group.draw(window)
+    bullets_group.update()
 
     # refresh screen
-    all_sprites_group.update()
     clock.tick(60)
     pygame.display.flip()
