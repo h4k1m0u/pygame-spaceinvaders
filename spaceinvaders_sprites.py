@@ -62,12 +62,12 @@ class Enemy(Space_Invaders_Sprite):
         self.rect.x, self.rect.y = x, y
 
     def update(self, direction='right'):
-        """ Moves enemies left or right or bottom
+        """ Moves enemies left or right or down
 
             Attributes:
-                direction (str): 'left' or 'right' or 'bottom'
+                direction (str): 'left' or 'right' or 'down'
         """
-        if direction == 'bottom':
+        if direction == 'down':
             self.rect.move_ip(0, ENEMY_SPEED)
         elif direction == 'right':
             self.rect.move_ip(ENEMY_SPEED, 0)

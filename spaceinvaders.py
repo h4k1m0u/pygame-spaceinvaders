@@ -56,11 +56,11 @@ while True:
 
             if direction == 'left':
                 if collide_left:
-                    direction = 'bottom'
+                    direction = 'down'
             elif direction == 'right':
                 if collide_right:
-                    direction = 'bottom'
-            elif direction == 'bottom':
+                    direction = 'down'
+            elif direction == 'down':
                 if collide_left:
                     direction = 'right'
                 elif collide_right:
